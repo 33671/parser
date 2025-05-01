@@ -1,0 +1,89 @@
+    ?program: statement*
+
+    ?statement: declaration
+              | assignment
+              | expression_statement
+              | if_statement
+              | for_statement
+              | goto_statement
+              | label_statement
+              | block_statement
+              | ";"                  -> empty_statement # 空语句
+
+    declaration: type IDENTIFIER ("=" expression)? ";"
+    assignment: IDENTIFIER "=" expression ";"
+    expression_statement: expression ";"
+
+    if_statement: IF "(" expression ")" block_statement (ELSE block_statement)?
+
+    goto_statement: GOTO IDENTIFIER ";"
+    label_statement: IDENTIFIER ":" statement # 标签后面必须跟一个语句
+
+    block_statement: "{" statement* "}"
+
+    ?comparison: term (COMP_OP term)+
+    ?expression: term | comparison 
+    ?term: factor | term ADD_OP factor
+    ?factor: unary (MUL_OP unary)*
+    ?unary: "-" atom -> neg 
+          | ("!" atom) -> not_ 
+          | atom
+    ?atom: INT_NUMBER           -> int_literal
+         | FLOAT_NUMBER         -> float_literal
+         | IDENTIFIER           -> variable
+         | "(" expression ")"
+         | assign_expr          # Allow assignment as part of an expression
+
+    assign_expr: IDENTIFIER "=" expression # Assignment *expression* (value is rhs)
+
+    # Revised for statement structure based on C standard
+    for_statement: FOR LPAR for_init_clause for_cond_expr ";" for_update_expr RPAR statement
+
+    # Clause 1: Declaration (includes ';') OR optional expression followed by ';'.
+    for_init_clause: declaration           # Handles: int i = 0;
+                     | (assign_expr ";")       # Handles: i = 0;  OR just ;
+
+    # Condition: Optional expression (no ';' expected by this rule itself)
+    for_cond_expr: expression?           # Handles: i < 10 or empty
+    assign_expr_for_update: assign_expr
+    # Update: Optional expression (no ';' expected by this rule itself)
+    ?for_update_expr: assign_expr_for_update?          # Handles: i++ or i = i + 1 or empty
+
+
+
+    // --- 基本类型 ---
+    type: INT | FLOAT
+
+    // --- 终端符号 (Lexer Tokens) ---
+    IF: "if"
+    ELSE: "else"
+    FOR: "for"
+    GOTO: "goto"
+    INT: "int"
+    FLOAT: "float"
+
+    IDENTIFIER: /[a-zA-Z_][a-zA-Z0-9_]*/
+    INT_NUMBER: /\d+/
+    // 改进 FLOAT_NUMBER 以处理像 .5 或 5. 这样的情况
+    FLOAT_NUMBER: /(\d+\.\d*|\.\d+)([eE][+-]?\d+)?|\d+[eE][+-]?\d+/
+                | /\d+\.\d*/  // 匹配 5.
+                | /\.\d+/     // 匹配 .5
+
+    COMP_OP: "==" | "!=" | "<=" | ">=" | "<" | ">" | "&&" | "||"
+    ADD_OP: "+" | "-"
+    MUL_OP: "*" | "/" | "%"
+
+    // 忽略空白和注释
+    %import common.WS
+    %ignore WS
+    %ignore /\/\/[^\n]*/      // C++ 风格单行注释
+    %ignore /\/\*.*?\*\//s    // C 风格多行注释 (non-greedy)
+
+    // 显式定义标点符号 (虽然 Lark 可以推断，但显式更好)
+    LPAR: "("
+    RPAR: ")"
+    LBRACE: "{"
+    RBRACE: "}"
+    SEMI: ";"
+    COLON: ":"
+    ASSIGN: "="
