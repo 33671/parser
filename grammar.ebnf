@@ -15,7 +15,7 @@
     assignment: IDENTIFIER "=" expression ";"
     expression_statement: expression ";"
     print_statement: "print" expression ";" 
-    if_statement: IF "(" expression ")" block_statement (ELSE block_statement)?
+    if_statement: IF "(" expression ")" block_statement ("else" block_statement)?
 
     goto_statement: GOTO IDENTIFIER ";"
     label_statement: IDENTIFIER ":"
@@ -57,7 +57,6 @@
 
     // --- 终端符号 (Lexer Tokens) ---
     IF: "if"
-    ELSE: "else"
     FOR: "for"
     GOTO: "goto"
     INT: "int"

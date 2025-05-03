@@ -26,8 +26,8 @@ class Interpreter(ASTVisitor):
             self.visit(stmt, node) 
     def visit_declaration(self, node: AstNode, parent: AstNode):
         var_name = node.var_name
-        if var_name in self.variables:
-            raise RuntimeError(f"Variable {var_name} already declared")
+        # if var_name in self.variables:
+        #     raise RuntimeError(f"Variable {var_name} already declared")
         
         # 处理初始化值
         if node.right:
@@ -67,6 +67,8 @@ class Interpreter(ASTVisitor):
                 return left_value * right_value
             elif node.token.type == TokenType.OP_DIV:
                 return left_value / right_value
+            elif node.token.type == TokenType.OP_MOD:
+                return left_value % right_value
         elif node.left:
             return self.visit(node.left, node)
         elif node.right:

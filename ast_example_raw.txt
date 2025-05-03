@@ -22,14 +22,24 @@ program
         term
           variable	i
           +
-          int_literal	2
+          int_literal	1
     )
     block_statement
-      assignment
-        sum
-        term
-          variable	sum
-          +
-          variable	i
+      if_statement
+        if
+        comparison
+          factor
+            variable	i
+            %
+            int_literal	2
+          !=
+          int_literal	0
+        block_statement
+          assignment
+            sum
+            term
+              variable	sum
+              +
+              variable	i
   print_statement
     variable	sum
