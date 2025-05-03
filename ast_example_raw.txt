@@ -1,0 +1,35 @@
+program
+  declaration
+    type	int
+    sum
+    int_literal	0
+  for_statement
+    for
+    (
+    for_init_clause
+      declaration
+        type	int
+        i
+        int_literal	0
+    for_cond_expr
+      comparison
+        variable	i
+        <=
+        int_literal	100
+    assign_expr_for_update
+      assign_expr
+        i
+        term
+          variable	i
+          +
+          int_literal	2
+    )
+    block_statement
+      assignment
+        sum
+        term
+          variable	sum
+          +
+          variable	i
+  print_statement
+    variable	sum

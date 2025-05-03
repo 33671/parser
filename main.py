@@ -1,6 +1,9 @@
 import lark
 from lark import Lark
 from ast_trans import AstTransformer
+from tokens import AstNode
+import pprint
+from interpreter import Interpreter
 c_grammar = ""
 with open("grammar.ebnf", "r", encoding="utf-8") as f:
     c_grammar = f.read()
@@ -31,14 +34,20 @@ try:
     # 不使用 Transformer 生成原始树进行比较
     raw_parser = Lark(c_grammar, start="program", parser="lalr")
     parse_tree = raw_parser.parse(code_example.strip())
-    print(parse_tree.pretty())  # pretty() 方法可以很好地可视化树
-
+    # print(parse_tree.pretty())  # pretty() 方法可以很好地可视化树
+    with open("ast_example_raw.txt", "w", encoding="utf-8") as f:
+        f.write(parse_tree.pretty())
     print("\n--- 转换后的 AST (使用 Transformer) ---")
-    ast = c_parser.parse(code_example)  # 使用带 Transformer 的解析器
+    ast :AstNode = c_parser.parse(code_example)  # 使用带 Transformer 的解析器
     # 打印更结构化的 AST (这里是嵌套元组)
-    import pprint
-
+    
+    with open("ast_example.txt", "w", encoding="utf-8") as f:
+        pprint.pprint(ast, stream=f)
     pprint.pprint(ast)
+    Interpreter().visit(ast)
+
+
+
 
 except lark.exceptions.UnexpectedToken as e:
     print(f"\n语法错误！意外的 token: {e.token}")

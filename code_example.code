@@ -1,21 +1,6 @@
-int count = -2;
-int total = !(a > ( 100 + 32983 + (1 < -100)));
-int i = 20 + - (0-1)*100;
-i = i + 1; // 简单的赋值
-start_loop: // 这是一个标签
-    if (i >= 10) {
-        goto end_loop; // 跳转到标签
-    }
-int j = 0;
-// 一个 for 循环示例
-for (j = 3; j < 5; j = 1 + i) {
-    total = total + i * 1.5 + j;
+int sum = 0;
+for (int i = 0;i <= 100;i = i + 2)
+{
+    sum = sum + i;
 }
-0 > 1;
-count = count + 1;
-i = i + 1;
-goto start_loop; // 跳转回循环开始
-
-end_loop: // 循环结束标签
-    total = total * 2.0; // 做一些最后的操作
-    i; // 简单的表达式语句
+print sum;
