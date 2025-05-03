@@ -62,6 +62,8 @@ class NodeType(Enum):
     FOR_COND_EXPR = auto()
     FOR_UPDATE_EXPR = auto()
     ASSIGN_EXPR_FOR_UPDATE = auto()
+    FOR_BREAK = auto()
+    FOR_CONTINUE = auto()
 
     def to_dict(self):
         return {self.name: self.value}

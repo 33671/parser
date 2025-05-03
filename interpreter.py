@@ -1,6 +1,12 @@
 from ast_visitor import ASTVisitor
 from tokens import TokenType, NodeType, Token, AstNode
 from typing import Optional, List, Union
+
+class ForBreakSignal(Exception):
+    pass
+
+class ForContinueSignal(Exception):
+    pass
 class Interpreter(ASTVisitor):
     """AST解释执行器"""
     
@@ -145,15 +151,22 @@ class Interpreter(ASTVisitor):
         while True:
             if node.cond_expr:
                 condition = self.visit(node.cond_expr, node)
-                print("for condition:",condition,node.cond_expr)
+                # print("for condition:",condition,node.cond_expr)
                 if not condition:
-                    print("for break")
+                    # print("for break")
                     break
             
             # 执行循环体
             if node.for_body:
-                print("for excuted")
-                self.visit(node.for_body, node)
+                # print("for excuted")
+                try:
+                    self.visit(node.for_body, node)
+                except ForBreakSignal:
+                    # print("for break")
+                    break
+                except ForContinueSignal:
+                    # print("for continue")
+                    continue
             
             # 更新表达式
             if node.update_expr:
@@ -185,4 +198,9 @@ class Interpreter(ASTVisitor):
         # 处理for循环的更新表达式
         var_name = self.visit(node.left)
         return None
+    
+    def visit_for_break(self,node:AstNode,parent:AstNode):
+        raise ForBreakSignal("Break from for loop")
+    def visit_for_continue(self,node:AstNode,parent:AstNode):
+        raise ForContinueSignal("Continue from for loop")
     # may be its impossible to implement goto and label,let's just ignore it

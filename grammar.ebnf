@@ -8,13 +8,17 @@
               | goto_statement
               | label_statement
               | block_statement
+              | continue_statement
+              | break_statement
               | print_statement
               | ";"                  -> empty_statement # 空语句
 
     declaration: type IDENTIFIER ("=" expression)? ";"
     assignment: IDENTIFIER "=" expression ";"
     expression_statement: expression ";"
-    print_statement: "print" expression ";" 
+    print_statement: "print" expression ";"
+    break_statement: "break" ";"
+    continue_statement: "continue" ";" 
     if_statement: IF "(" expression ")" block_statement ("else" block_statement)?
 
     goto_statement: GOTO IDENTIFIER ";"

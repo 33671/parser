@@ -1,8 +1,12 @@
 program
   declaration
     type	int
-    sum
+    a
     int_literal	0
+  declaration
+    type	int
+    b
+    int_literal	1
   for_statement
     for
     (
@@ -25,21 +29,34 @@ program
           int_literal	1
     )
     block_statement
+      declaration
+        type	int
+        c
+        term
+          variable	a
+          +
+          variable	b
+      assignment
+        a
+        variable	b
+      assignment
+        b
+        variable	c
       if_statement
         if
         comparison
-          factor
-            variable	i
-            %
-            int_literal	2
-          !=
-          int_literal	0
+          variable	c
+          <
+          int_literal	100
         block_statement
-          assignment
-            sum
-            term
-              variable	sum
-              +
-              variable	i
-  print_statement
-    variable	sum
+          continue_statement
+      print_statement
+        variable	c
+      if_statement
+        if
+        comparison
+          variable	c
+          >
+          int_literal	10000
+        block_statement
+          break_statement
